@@ -27,7 +27,7 @@ app.post('/location', (req, res) => {
 
 app.get('/', (req, res) => {
   var result = db.collection('location').find().toArray(function(err, items) {
-  	res.send(JSON.stringify(items))
+  	res.json(items)
   })
 })
 
