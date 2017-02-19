@@ -3,7 +3,7 @@ var app = express();
 var bodyParser= require('body-parser');
 var mongoose = require("mongoose");
 
-user = require('./models/user');
+var user = require('./models/user');
 
 //connect to mongoose
 
