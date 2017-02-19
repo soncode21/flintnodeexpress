@@ -1,30 +1,39 @@
 var express = require('express');
 var app = express();
-var bodyParser= require('body-parser');
-var mongoose = require("mongoose");
+MongoClient = require('mongodb').MongoClient;
+var bodyParser = require('body-parser')
 
-var user = require('./models/user');
+app.use( bodyParser.json() );
 
-//connect to mongoose
+var db
 
-mongoose.connect("mongodb://localhost/wuberdb");
-var db = mongoose.connection;
-
-app.get('/', function(req,res){
-	res.send('user added');
+MongoClient.connect('mongodb://sonallamba:Sonal@ds157459.mlab.com:57459/wuberdb', (err, database) => {
+  if (err) return console.log(err)
+  db = database
+  app.listen(3000, () => {
+    console.log('listening on 3000')
+  });
 });
 
+app.post('/location', (req, res) => {
+  db.collection('location').save(req.body, (err, result) => {
+    if (err) return console.log(err)
 
-app.get('/api/user', function(req,res){
-	user.getUser(function(err,users)
-	{
-		if(err){
-			throw err;
-		}
-		res.json(User);
+    console.log('saved to database')
+	res.send("Thanks for posting")
+  })
+})
 
-	});
-});
-app.listen(3000);
-console.log('running on port 3000');
 
+app.get('/', (req, res) => {
+  var result = db.collection('location').find().toArray(function(err, items) {
+  	res.send(JSON.stringify(items))
+  })
+})
+
+
+// db.collection('location').find().toArray(function(err, results) {
+//   console.log(results)
+//   results.send(JSON.stringify
+//   // send HTML file populated with quotes here
+// })
